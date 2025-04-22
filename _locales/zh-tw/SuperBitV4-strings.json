@@ -1,0 +1,22 @@
+{
+  "SuperBitV4.RGB_Program|block": "RGB編程燈",
+  "SuperBitV4.Music|block": "音樂播放|%index",
+  "SuperBitV4.Servo|block": "舵機(180)|編號 %num|角度 %value",
+  "SuperBitV4.Servo2|block": "舵機(270)|編號 %num|角度 %value",
+  "SuperBitV4.Servo3|block": "舵機(360)|編號 %num|方向 %pos|速度 %value",
+  "SuperBitV4.Servo4|block": "舵機(360-可旋轉)|編號 %num|方向 %pos|速度 %value",
+  "SuperBitV4.MotorRun|block": " 直流電機|%index|速度(-255~255) %speed",
+  "SuperBitV4.MotorRunDual|block": " 直流電機|%motor1|速度(-255~255) %speed1|%motor2|速度(-255~255) %speed2",
+  "SuperBitV4.MotorStopAll|block": "停止所有電機",
+  "SuperBitV4.StepperDegree|block": "步進電機(28BYJ-48) |%index|角度 %degree",
+  "SuperBitV4.StepperTurn|block": "步進電機(28BYJ-48) |%index|轉 %turn|圈數",
+  "SuperBitV4.StepperDual|block": "雙步進電機(角度) |B1 %degree1| B2 %degree2",
+  "SuperBitV4.enPos.forward|block": "正轉",
+  "SuperBitV4.enPos.reverse|block": "反轉",
+  "SuperBitV4.enPos.stop|block": "停止",
+  "SuperBitV4.PWMOFF|block":  "關閉PWM輸出|%index",
+  
+
+}
+
+
