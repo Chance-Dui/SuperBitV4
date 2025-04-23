@@ -111,13 +111,21 @@ namespace SuperBitV4 {
         S7,
         S8
     }
+    /**
+     * 直流电机选择枚举
+     */
     export enum enMotors {
         M1 = 8,
         M2 = 10,
         M3 = 12,
         M4 = 14
     }
-
+    /**
+    * 向指定的 I2C 地址和寄存器写入一个字节的数据
+     * @param addr I2C 设备地址
+     * @param reg 寄存器地址
+     * @param value 要写入的字节数据
+     */
     function i2cwrite(addr: number, reg: number, value: number) {
         let buf = pins.createBuffer(2)
         buf[0] = reg
@@ -125,75 +133,124 @@ namespace SuperBitV4 {
         pins.i2cWriteBuffer(addr, buf)
     }
 
+    /**
+     * 向指定的 I2C 地址写入一个字节的命令
+     * @param addr I2C 设备地址
+     * @param value 要写入的字节数据
+     */
     function i2ccmd(addr: number, value: number) {
         let buf = pins.createBuffer(1)
         buf[0] = value
         pins.i2cWriteBuffer(addr, buf)
     }
-
+    
+    /**
+     * 从指定的 I2C 地址和寄存器读取一个字节的数据
+     * @param addr I2C 设备地址
+     * @param reg 寄存器地址
+     * @returns 读取到的字节数据
+     */
+    
     function i2cread(addr: number, reg: number) {
         pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
         let val = pins.i2cReadNumber(addr, NumberFormat.UInt8BE);
         return val;
     }
-
+    /**
+     * 初始化 PCA9635 芯片
+     */
     function initPCA9635(): void {
+        // 设置 MODE1 寄存器为 0x00，启用正常模式
         i2cwrite(PCA9635_ADD, MODE1, 0x00)
+        // 设置 PWM 频率为 50Hz，适用于舵机控制
         setFreq(50);
+        // 标记为已初始化
         initialized = true
     }
-
+    
+    /**
+     * 设置 PWM 频率
+     * @param freq PWM 频率 (Hz)
+     */
     function setFreq(freq: number): void {
         // Constrain the frequency
-        let prescaleval = 25000000;
-        prescaleval /= 256;  
+        // 约束频率范围
+        let prescaleval = 25000000;   // 内部时钟频率
+        prescaleval /= 256;           // 固定的分频系数
         prescaleval /= freq;
         prescaleval -= 1;
         let prescale = prescaleval; //Math.Floor(prescaleval + 0.5);
         let oldmode = i2cread(PCA9635_ADD, MODE1);
+        // 进入睡眠模式以设置预分频器
         let newmode = (oldmode & 0x7F) | 0x10; // sleep
         i2cwrite(PCA9635_ADD, MODE1, newmode); // go to sleep
+        // 设置预分频器的值
         i2cwrite(PCA9635_ADD, PRESCALE, prescale); // set the prescaler
+        // 恢复原来的模式
         i2cwrite(PCA9635_ADD, MODE1, oldmode);
         control.waitMicros(5000);
+        // 启用自动递增模式
         i2cwrite(PCA9635_ADD, MODE1, oldmode | 0xa1);
     }
-
+    
+    /**
+     * 设置指定通道的 PWM 输出
+     * @param channel PWM 通道 (0-15)
+     * @param on PWM 开启时的计数值 (0-4095)
+     * @param off PWM 关闭时的计数值 (0-4095)
+     */
     function setPwm(channel: number, on: number, off: number): void {
+        // 检查通道是否有效
         if (channel < 0 || channel > 15)
             return;
+        // 如果未初始化，则先进行初始化
         if (!initialized) {
             initPCA9635();
         }
         let buf = pins.createBuffer(5);
         buf[0] = LED0_ON_L + 4 * channel;
+        // 写入开启和关闭的低字节
         buf[1] = on & 0xff;
+        // 写入开启的高字节
         buf[2] = (on >> 8) & 0xff;
+        // 写入关闭的低字节
         buf[3] = off & 0xff;
+        // 写入关闭的高字节
         buf[4] = (off >> 8) & 0xff;
         pins.i2cWriteBuffer(PCA9635_ADD, buf);
     }
-
+    
+    /**
+     * 控制步进电机
+     * @param index 选择要控制的步进电机 (B1: M1+M2, B2: M3+M4)
+     * @param dir 旋转方向 (true: 正转, false: 反转)
+     */
     function setStepper(index: number, dir: boolean): void {
+        
         if (index == enSteppers.B1) {
+            // 控制 M1 和 M2  =  B1
             if (dir) {
+                // 正转时设置 PWM 值
                 setPwm(11, STP_CHA_L, STP_CHA_H);
                 setPwm(9, STP_CHB_L, STP_CHB_H);
                 setPwm(10, STP_CHC_L, STP_CHC_H);
                 setPwm(8, STP_CHD_L, STP_CHD_H);
             } else {
+                // 反转时设置 PWM 值
                 setPwm(8, STP_CHA_L, STP_CHA_H);
                 setPwm(10, STP_CHB_L, STP_CHB_H);
                 setPwm(9, STP_CHC_L, STP_CHC_H);
                 setPwm(11, STP_CHD_L, STP_CHD_H);
             }
         } else {
+            // 控制 M3 和 M4
             if (dir) {
                 setPwm(12, STP_CHA_L, STP_CHA_H);
                 setPwm(14, STP_CHB_L, STP_CHB_H);
                 setPwm(13, STP_CHC_L, STP_CHC_H);
                 setPwm(15, STP_CHD_L, STP_CHD_H);
             } else {
+                // 反转时设置 PWM 值
                 setPwm(15, STP_CHA_L, STP_CHA_H);
                 setPwm(13, STP_CHB_L, STP_CHB_H);
                 setPwm(14, STP_CHC_L, STP_CHC_H);
@@ -201,15 +258,20 @@ namespace SuperBitV4 {
             }
         }
     }
-
+    
+     /**
+     * 停止指定的电机
+     * @param index 电机通道 (8, 10, 12, 14)
+     */
     function stopMotor(index: number) {
         setPwm(index, 0, 0);
         setPwm(index + 1, 0, 0);
     }
     /**
      * *****************************************************************
-     * @param index
-     */   
+    /**
+     * 初始化并获取板载 RGB 灯条对象
+     */
     //% blockId=SuperBitV4_RGB_Program block="RGB_Program"
     //% weight=99
     //% blockGap=10
@@ -221,7 +283,11 @@ namespace SuperBitV4 {
         }
         return yahStrip;  
     } 
-    
+
+     /**
+     * 播放内置音乐
+     * @param index 选择要播放的音乐
+     */
     //% blockId=SuperBitV4_Music block="Music|%index"
     //% weight=98
     //% blockGap=10
