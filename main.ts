@@ -179,6 +179,7 @@ namespace SuperBitV4 {
         prescaleval /= 24*4096;           // 固定的分频系数
         prescaleval /= freq;
         prescaleval -= 1;
+        prescaleval = 254;    //因为无法除整
         let prescale = prescaleval; //Math.Floor(prescaleval + 0.5);
         let oldmode = i2cread(PCA9635_ADD, MODE1);
         // 进入睡眠模式以设置预分频器
