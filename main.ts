@@ -176,7 +176,7 @@ namespace SuperBitV4 {
         // Constrain the frequency
         // 约束频率范围
         let prescaleval = 25000000;   // 内部时钟频率
-//        prescaleval /= 4101;           // 固定的分频系数
+//        prescaleval /= 4096;           // 固定的分频系数
 //        prescaleval /= freq;
 //        prescaleval -= 1;
         prescaleval = 254;    //因为无法除整
