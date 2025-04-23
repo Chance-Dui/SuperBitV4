@@ -208,7 +208,7 @@ namespace SuperBitV4 {
             initPCA9635();
         }
         let buf = pins.createBuffer(2);
-        buf[0] = 2 + channel;
+        buf[0] = 0x02 + channel;
         buf[1] = off & 0xff;
         pins.i2cWriteBuffer(PCA9635_ADD, buf);
     }
