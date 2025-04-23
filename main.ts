@@ -8,7 +8,7 @@ load dependency
 //% color="#ECA40D" weight=30 icon="\uf135"
 namespace SuperBitV4 {
 
-    const PCA9635_ADD = 0x60
+    const PCA9635_ADD = 0x40
     const MODE1 = 0x00
     const MODE2 = 0x01
     const SUBADR1 = 0x02
