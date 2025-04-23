@@ -199,7 +199,7 @@ namespace SuperBitV4 {
      * @param on PWM 开启时的计数值 (0-4095)
      * @param off PWM 关闭时的计数值 (0-4095)
      */
-    function setPwm(channel: number, on: number, off: number): void {
+    function setPwm(channel: number, on: number): void {
         // 检查通道是否有效
         if (channel < 0 || channel > 15)
             return;
@@ -225,30 +225,30 @@ namespace SuperBitV4 {
             // 控制 M1 和 M2  =  B1
             if (dir) {
                 // 正转时设置 PWM 值
-                setPwm(11, STP_CHA_L, STP_CHA_H);
-                setPwm(9, STP_CHB_L, STP_CHB_H);
-                setPwm(10, STP_CHC_L, STP_CHC_H);
-                setPwm(8, STP_CHD_L, STP_CHD_H);
+                setPwm(11, STP_CHA_L);
+                setPwm(9, STP_CHB_L);
+                setPwm(10, STP_CHC_L);
+                setPwm(8, STP_CHD_L);
             } else {
                 // 反转时设置 PWM 值
-                setPwm(8, STP_CHA_L, STP_CHA_H);
-                setPwm(10, STP_CHB_L, STP_CHB_H);
-                setPwm(9, STP_CHC_L, STP_CHC_H);
-                setPwm(11, STP_CHD_L, STP_CHD_H);
+                setPwm(8, STP_CHA_L);
+                setPwm(10, STP_CHB_L);
+                setPwm(9, STP_CHC_L);
+                setPwm(11, STP_CHD_L);
             }
         } else {
             // 控制 M3 和 M4
             if (dir) {
-                setPwm(12, STP_CHA_L, STP_CHA_H);
-                setPwm(14, STP_CHB_L, STP_CHB_H);
-                setPwm(13, STP_CHC_L, STP_CHC_H);
-                setPwm(15, STP_CHD_L, STP_CHD_H);
+                setPwm(12, STP_CHA_L);
+                setPwm(14, STP_CHB_L);
+                setPwm(13, STP_CHC_L);
+                setPwm(15, STP_CHD_L);
             } else {
                 // 反转时设置 PWM 值
-                setPwm(15, STP_CHA_L, STP_CHA_H);
-                setPwm(13, STP_CHB_L, STP_CHB_H);
-                setPwm(14, STP_CHC_L, STP_CHC_H);
-                setPwm(12, STP_CHD_L, STP_CHD_H);
+                setPwm(15, STP_CHA_L);
+                setPwm(13, STP_CHB_L);
+                setPwm(14, STP_CHC_L);
+                setPwm(12, STP_CHD_L);
             }
         }
     }
