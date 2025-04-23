@@ -161,7 +161,7 @@ namespace SuperBitV4 {
      */
     function initPCA9635(): void {
         // 设置 MODE1 寄存器为 0x00，启用正常模式
-        i2cwrite(PCA9635_ADD, MODE1, 0x00)
+        i2cwrite(PCA9635_ADD, MODE1, 0x80)     //由0x00改为0x80
         // 设置 PWM 频率为 50Hz，适用于舵机控制
         setFreq(50);
         // 标记为已初始化
