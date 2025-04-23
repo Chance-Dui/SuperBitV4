@@ -207,16 +207,10 @@ namespace SuperBitV4 {
         if (!initialized) {
             initPCA9635();
         }
-        let buf = pins.createBuffer(5);
-        buf[0] = LED0_ON_L + 4 * channel;
-        // 写入开启和关闭的低字节
-        buf[1] = on & 0xff;
-        // 写入开启的高字节
-        buf[2] = (on >> 8) & 0xff;
-        // 写入关闭的低字节
-        buf[3] = off & 0xff;
-        // 写入关闭的高字节
-        buf[4] = (off >> 8) & 0xff;
+        let buf = pins.createBuffer(1);
+        buf[0] = 2 + channel;
+        // 写入寄存器地址
+
         pins.i2cWriteBuffer(PCA9635_ADD, buf);
     }
     
