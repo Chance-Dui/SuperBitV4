@@ -34,7 +34,7 @@ namespace SuperBitV4 {
     const STP_CHB_H = 128
 
     const STP_CHC_L = 63
-    const STP_CHC_H = 3071
+    const STP_CHC_H = 191
 
     const STP_CHD_L = 191
     const STP_CHD_H = 127
