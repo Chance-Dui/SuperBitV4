@@ -176,7 +176,7 @@ namespace SuperBitV4 {
         // Constrain the frequency
         // 约束频率范围
         let prescaleval = 25000000;   // 内部时钟频率
-        prescaleval /= 256;           // 固定的分频系数
+        prescaleval /= 24*4096;           // 固定的分频系数
         prescaleval /= freq;
         prescaleval -= 1;
         let prescale = prescaleval; //Math.Floor(prescaleval + 0.5);
