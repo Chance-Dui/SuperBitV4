@@ -115,10 +115,10 @@ namespace SuperBitV4 {
      * 直流电机选择枚举
      */
     export enum enMotors {
-        M1 = 8,
-        M2 = 10,
-        M3 = 12,
-        M4 = 14
+        M1 = 0,
+        M2 = 2,
+        M3 = 4,
+        M4 = 6
     }
     /**
     * 向指定的 I2C 地址和寄存器写入一个字节的数据
