@@ -221,34 +221,34 @@ namespace SuperBitV4 {
     function setStepper(index: number, dir: boolean): void {
         if (index == enSteppers.B1) {
             if (dir) {
-                setPwm(11, 0, STP_CHA_H);
-                setPwm(9, 0, STP_CHB_H);
-                setPwm(10, 0, STP_CHC_H);
-                setPwm(8, 0, STP_CHD_H);
+                setPwm(5, 0, STP_CHA_H);
+                setPwm(3, 0, STP_CHB_H);
+                setPwm(4, 0, STP_CHC_H);
+                setPwm(2, 0, STP_CHD_H);
             } else {
-                setPwm(8, 0, STP_CHA_H);
-                setPwm(10, 0, STP_CHB_H);
-                setPwm(9, 0, STP_CHC_H);
-                setPwm(11, 0, STP_CHD_H);
+                setPwm(2, 0, STP_CHA_H);
+                setPwm(4, 0, STP_CHB_H);
+                setPwm(3, 0, STP_CHC_H);
+                setPwm(5, 0, STP_CHD_H);
             }
         } else {
             if (dir) {
-                setPwm(12, 0, STP_CHA_H);
-                setPwm(14, 0, STP_CHB_H);
-                setPwm(13, 0, STP_CHC_H);
-                setPwm(15, 0, STP_CHD_H);
+                setPwm(6, 0, STP_CHA_H);
+                setPwm(8, 0, STP_CHB_H);
+                setPwm(7, 0, STP_CHC_H);
+                setPwm(9, 0, STP_CHD_H);
             } else {
-                setPwm(15, 0, STP_CHA_H);
-                setPwm(13, 0, STP_CHB_H);
-                setPwm(14, 0, STP_CHC_H);
-                setPwm(12, 0, STP_CHD_H);
+                setPwm(9, 0, STP_CHA_H);
+                setPwm(7, 0, STP_CHB_H);
+                setPwm(8, 0, STP_CHC_H);
+                setPwm(6, 0, STP_CHD_H);
             }
         }
     }
     
      /**
      * 停止指定的电机
-     * @param index 电机通道 (8, 10, 12, 14)
+     * @param index 电机通道 (2, 4, 6, 8)
      */
     function stopMotor(index: number) {
         setPwm(index, 0, 0);
@@ -412,7 +412,7 @@ namespace SuperBitV4 {
         let a = index
         let b = index + 1
         
-        if (a > 10)
+        if (a > 4)
         {
             if (speed >= 0) {
                 setPwm(a, 0, speed)
