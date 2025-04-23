@@ -208,11 +208,8 @@ namespace SuperBitV4 {
             initPCA9635();
         }
         let buf = pins.createBuffer(2);
-        buf[0] = LED0_ON_L + 4 * channel;
-        buf[1] = on & 0xff;
-        buf[2] = (on >> 8) & 0xff;
-        buf[3] = off & 0xff;
-        buf[4] = (off >> 8) & 0xff;
+        buf[0] = 2 + channel;
+        buf[1] = off & 0xff;
         pins.i2cWriteBuffer(PCA9635_ADD, buf);
     }
     
@@ -224,27 +221,27 @@ namespace SuperBitV4 {
     function setStepper(index: number, dir: boolean): void {
         if (index == enSteppers.B1) {
             if (dir) {
-                setPwm(11, STP_CHA_L, STP_CHA_H);
-                setPwm(9, STP_CHB_L, STP_CHB_H);
-                setPwm(10, STP_CHC_L, STP_CHC_H);
-                setPwm(8, STP_CHD_L, STP_CHD_H);
+                setPwm(11, 0, STP_CHA_H);
+                setPwm(9, 0, STP_CHB_H);
+                setPwm(10, 0, STP_CHC_H);
+                setPwm(8, 0, STP_CHD_H);
             } else {
-                setPwm(8, STP_CHA_L, STP_CHA_H);
-                setPwm(10, STP_CHB_L, STP_CHB_H);
-                setPwm(9, STP_CHC_L, STP_CHC_H);
-                setPwm(11, STP_CHD_L, STP_CHD_H);
+                setPwm(8, 0, STP_CHA_H);
+                setPwm(10, 0, STP_CHB_H);
+                setPwm(9, 0, STP_CHC_H);
+                setPwm(11, 0, STP_CHD_H);
             }
         } else {
             if (dir) {
-                setPwm(12, STP_CHA_L, STP_CHA_H);
-                setPwm(14, STP_CHB_L, STP_CHB_H);
-                setPwm(13, STP_CHC_L, STP_CHC_H);
-                setPwm(15, STP_CHD_L, STP_CHD_H);
+                setPwm(12, 0, STP_CHA_H);
+                setPwm(14, 0, STP_CHB_H);
+                setPwm(13, 0, STP_CHC_H);
+                setPwm(15, 0, STP_CHD_H);
             } else {
-                setPwm(15, STP_CHA_L, STP_CHA_H);
-                setPwm(13, STP_CHB_L, STP_CHB_H);
-                setPwm(14, STP_CHC_L, STP_CHC_H);
-                setPwm(12, STP_CHD_L, STP_CHD_H);
+                setPwm(15, 0, STP_CHA_H);
+                setPwm(13, 0, STP_CHB_H);
+                setPwm(14, 0, STP_CHC_H);
+                setPwm(12, 0, STP_CHD_H);
             }
         }
     }
