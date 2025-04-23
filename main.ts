@@ -161,9 +161,9 @@ namespace SuperBitV4 {
      */
     function initPCA9635(): void {
         // 设置 MODE1 寄存器为 0x00，启用正常模式
-        i2cwrite(PCA9635_ADD, MODE1, 0x00)     //由0x00改为0x80
-        // 设置 PWM 频率为 50Hz，适用于舵机控制
-        setFreq(50);
+        i2cwrite(PCA9635_ADD, MODE1, 0x00)     //由0x00
+        // 设置 PWM 频率为 24Hz，适用于舵机控制
+        setFreq(24);
         // 标记为已初始化
         initialized = true
     }
@@ -176,15 +176,15 @@ namespace SuperBitV4 {
         // Constrain the frequency
         // 约束频率范围
         let prescaleval = 25000000;   // 内部时钟频率
-        prescaleval /= 24*4096;           // 固定的分频系数
-        prescaleval /= freq;
-        prescaleval -= 1;
+//        prescaleval /= 4101;           // 固定的分频系数
+//        prescaleval /= freq;
+//        prescaleval -= 1;
         prescaleval = 254;    //因为无法除整
-        let prescale = prescaleval; //Math.Floor(prescaleval + 0.5);
+        let prescale = prescaleval;     //Math.Floor(prescaleval + 0.5);
         let oldmode = i2cread(PCA9635_ADD, MODE1);
         // 进入睡眠模式以设置预分频器
-        let newmode = (oldmode & 0x7F) | 0x10; // sleep
-        i2cwrite(PCA9635_ADD, MODE1, newmode); // go to sleep
+        let newmode = (oldmode & 0x7F) | 0x10;   // sleep    
+        i2cwrite(PCA9635_ADD, MODE1, newmode);   // go to sleep
         // 设置预分频器的值
         i2cwrite(PCA9635_ADD, PRESCALE, prescale); // set the prescaler
         // 恢复原来的模式
