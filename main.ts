@@ -199,7 +199,7 @@ namespace SuperBitV4 {
      * @param on PWM 开启时的计数值 (0-4095)
      * @param off PWM 关闭时的计数值 (0-4095)
      */
-    function setPwm(channel: number, on: number): void {
+    function setPwm(channel: number, on: number, off: number): void {
         // 检查通道是否有效
         if (channel < 0 || channel > 15)
             return;
@@ -208,9 +208,11 @@ namespace SuperBitV4 {
             initPCA9635();
         }
         let buf = pins.createBuffer(2);
-        buf[0] = 2 + channel;
-        // 写入寄存器地址
-
+        buf[0] = LED0_ON_L + 4 * channel;
+        buf[1] = on & 0xff;
+        buf[2] = (on >> 8) & 0xff;
+        buf[3] = off & 0xff;
+        buf[4] = (off >> 8) & 0xff;
         pins.i2cWriteBuffer(PCA9635_ADD, buf);
     }
     
@@ -220,35 +222,29 @@ namespace SuperBitV4 {
      * @param dir 旋转方向 (true: 正转, false: 反转)
      */
     function setStepper(index: number, dir: boolean): void {
-        
         if (index == enSteppers.B1) {
-            // 控制 M1 和 M2  =  B1
             if (dir) {
-                // 正转时设置 PWM 值
-                setPwm(11, STP_CHA_L);
-                setPwm(9, STP_CHB_L);
-                setPwm(10, STP_CHC_L);
-                setPwm(8, STP_CHD_L);
+                setPwm(11, STP_CHA_L, STP_CHA_H);
+                setPwm(9, STP_CHB_L, STP_CHB_H);
+                setPwm(10, STP_CHC_L, STP_CHC_H);
+                setPwm(8, STP_CHD_L, STP_CHD_H);
             } else {
-                // 反转时设置 PWM 值
-                setPwm(8, STP_CHA_L);
-                setPwm(10, STP_CHB_L);
-                setPwm(9, STP_CHC_L);
-                setPwm(11, STP_CHD_L);
+                setPwm(8, STP_CHA_L, STP_CHA_H);
+                setPwm(10, STP_CHB_L, STP_CHB_H);
+                setPwm(9, STP_CHC_L, STP_CHC_H);
+                setPwm(11, STP_CHD_L, STP_CHD_H);
             }
         } else {
-            // 控制 M3 和 M4
             if (dir) {
-                setPwm(12, STP_CHA_L);
-                setPwm(14, STP_CHB_L);
-                setPwm(13, STP_CHC_L);
-                setPwm(15, STP_CHD_L);
+                setPwm(12, STP_CHA_L, STP_CHA_H);
+                setPwm(14, STP_CHB_L, STP_CHB_H);
+                setPwm(13, STP_CHC_L, STP_CHC_H);
+                setPwm(15, STP_CHD_L, STP_CHD_H);
             } else {
-                // 反转时设置 PWM 值
-                setPwm(15, STP_CHA_L);
-                setPwm(13, STP_CHB_L);
-                setPwm(14, STP_CHC_L);
-                setPwm(12, STP_CHD_L);
+                setPwm(15, STP_CHA_L, STP_CHA_H);
+                setPwm(13, STP_CHB_L, STP_CHB_H);
+                setPwm(14, STP_CHC_L, STP_CHC_H);
+                setPwm(12, STP_CHD_L, STP_CHD_H);
             }
         }
     }
@@ -258,8 +254,8 @@ namespace SuperBitV4 {
      * @param index 电机通道 (8, 10, 12, 14)
      */
     function stopMotor(index: number) {
-        setPwm(index, 0);
-        setPwm(index + 1, 0);
+        setPwm(index, 0, 0);
+        setPwm(index + 1, 0, 0);
     }
     /**
      * *****************************************************************
@@ -322,7 +318,7 @@ namespace SuperBitV4 {
         let us = (value * 1800 / 180 + 600); // 0.6 ~ 2.4
         let pwm = us * 256 / 20000;
 
-        setPwm(num, pwm);
+        setPwm(num, 0, pwm);
 
     }
 
@@ -337,7 +333,7 @@ namespace SuperBitV4 {
         let newvalue = Math.map(value, 0, 270, 0, 180);
         let us = (newvalue * 1800 / 180 + 600); // 0.6 ~ 2.4
         let pwm = us * 256 / 20000;
-        setPwm(num, pwm);
+        setPwm(num, 0, pwm);
 
     }
 
@@ -353,17 +349,17 @@ namespace SuperBitV4 {
         if (pos == enPos.stop) {
             let us = (86 * 1800 / 180 + 600); // 0.6 ~ 2.4 
             let pwm = us * 256 / 20000;
-            setPwm(num, pwm);
+            setPwm(num, 0, pwm);
         }
         else if(pos == enPos.forward){ //0-90 -> 90 - 0
             let us = ((90-value) * 1800 / 180 + 600); // 0.6 ~ 2.4 
             let pwm = us * 256 / 20000;
-            setPwm(num, pwm);
+            setPwm(num, 0, pwm);
         }
         else if(pos == enPos.reverse){ //0-90 -> 90 -180  
             let us = ((90+value) * 1800 / 180 + 600); // 0.6 ~ 2.4
             let pwm = us * 256 / 20000;
-            setPwm(num, pwm);
+            setPwm(num, 0, pwm);
         }
 
        
@@ -382,17 +378,17 @@ namespace SuperBitV4 {
         if (pos == enPos.stop) {
             let us = (110 * 1800 / 180 + 600); // 0.6 ~ 2.4 error:86->110
             let pwm = us * 256 / 20000;
-            setPwm(num, pwm);
+            setPwm(num, 0, pwm);
         }
         else if(pos == enPos.forward){ //0-90 -> 90 - 0
             let us = ((110-value) * 1800 / 180 + 600); // 0.6 ~ 2.4 error:90->110
             let pwm = us * 256 / 20000;
-            setPwm(num, pwm);
+            setPwm(num, 0, pwm);
         }
         else if(pos == enPos.reverse){ //0-90 -> 90 -180  error:90->110
             let us = ((110+value) * 1800 / 180 + 600); // 0.6 ~ 2.4
             let pwm = us * 256 / 20000;
-            setPwm(num, pwm);
+            setPwm(num, 0, pwm);
         }
 
        
@@ -422,20 +418,20 @@ namespace SuperBitV4 {
         if (a > 10)
         {
             if (speed >= 0) {
-                setPwm(a, speed)
-                setPwm(b, 0)
+                setPwm(a, 0, speed)
+                setPwm(b, 0, 0)
             } else {
-                setPwm(a, 0)
-                setPwm(b, -speed)
+                setPwm(a, 0, 0)
+                setPwm(b, 0, -speed)
             }
         }
         else { 
             if (speed >= 0) {
-                setPwm(b, speed)
-                setPwm(a, 0)
+                setPwm(a, 0, speed)
+                setPwm(b, 0, 0)
             } else {
-                setPwm(b, 0)
-                setPwm(a, -speed)
+                setPwm(a, 0, 0)
+                setPwm(b, 0, -speed)
             }
         }
         
