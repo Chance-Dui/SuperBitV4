@@ -414,7 +414,7 @@ namespace SuperBitV4 {
         if (!initialized) {
             initPCA9635()
         }
-        speed = speed * 16;      // map 255 to 4096
+        speed = speed * 1;      // map 255 to 255
         if (speed >= 256) {
             speed = 255
         }
